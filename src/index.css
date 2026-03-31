@@ -1,0 +1,330 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 100% 99%;
+    --foreground: 248 100% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 248 100% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 248 100% 18%;
+
+    --primary: 248 100% 18%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 100% 24%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 215 30% 92%;
+    --muted-foreground: 215 20% 45%;
+
+    --accent: 157 97% 40%;
+    --accent-foreground: 248 100% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 30% 88%;
+    --input: 215 30% 88%;
+    --ring: 197 73% 40%;
+
+    --radius: 0.75rem;
+
+    --sky: 197 73% 40%;
+    --sky-foreground: 0 0% 100%;
+
+    --success: 157 97% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --sidebar-background: 248 100% 14%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 157 97% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 100% 24%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 248 60% 25%;
+    --sidebar-ring: 197 73% 40%;
+
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+  }
+
+  .dark {
+    --background: 248 100% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 248 80% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 248 80% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 157 97% 40%;
+    --primary-foreground: 248 100% 10%;
+
+    --secondary: 215 100% 24%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 248 40% 16%;
+    --muted-foreground: 215 20% 60%;
+
+    --accent: 157 97% 40%;
+    --accent-foreground: 248 100% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 248 40% 20%;
+    --input: 248 40% 20%;
+    --ring: 157 97% 40%;
+
+    --sky: 197 73% 40%;
+    --sky-foreground: 0 0% 100%;
+
+    --success: 157 97% 40%;
+    --success-foreground: 248 100% 10%;
+
+    --sidebar-background: 248 100% 6%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 157 97% 40%;
+    --sidebar-primary-foreground: 248 100% 10%;
+    --sidebar-accent: 215 100% 24%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 248 40% 20%;
+    --sidebar-ring: 157 97% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(157 97% 40% / 0.3), 0 0 60px hsl(157 97% 40% / 0.1);
+  }
+
+  .glow-accent-strong {
+    box-shadow: 0 0 30px hsl(157 97% 40% / 0.5), 0 0 80px hsl(157 97% 40% / 0.2);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(248 100% 18% / 0.3), 0 0 60px hsl(248 100% 18% / 0.1);
+  }
+
+  .glow-sky {
+    box-shadow: 0 0 20px hsl(197 73% 40% / 0.3), 0 0 60px hsl(197 73% 40% / 0.1);
+  }
+
+  .glow-destructive {
+    box-shadow: 0 0 15px hsl(0 72% 51% / 0.3);
+  }
+
+  .card-elevated {
+    @apply bg-card border border-border rounded-xl shadow-lg;
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(248 100% 18%), hsl(215 100% 24%));
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, hsl(197 73% 40%), hsl(157 97% 40%));
+  }
+
+  .gradient-hero {
+    background: linear-gradient(180deg, hsl(248 100% 10% / 0.8), hsl(248 100% 6% / 0.95));
+  }
+
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(197 73% 40%), hsl(157 97% 40%));
+  }
+
+  .animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsl(157 97% 40% / 0.3);
+    }
+
+    50% {
+      box-shadow: 0 0 40px hsl(157 97% 40% / 0.6);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-count-up {
+    animation: countUp 0.5s ease-out forwards;
+  }
+
+  /* PDF Export Styles */
+  .pdf-export {
+    background-color: white !important;
+    color: #111827 !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  .pdf-export * {
+    color-scheme: light !important;
+  }
+
+  .pdf-export .text-muted-foreground {
+    color: #6b7280 !important;
+  }
+
+  .pdf-export .font-medium,
+  .pdf-export .font-bold,
+  .pdf-export .font-black {
+    color: #110555 !important;
+  }
+
+  .pdf-export .bg-muted\/20 {
+    background-color: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+  }
+
+  .pdf-export .gradient-accent {
+    background: linear-gradient(135deg, #25bed4, #51e29e) !important;
+    opacity: 0.3 !important;
+  }
+
+  .pdf-export .text-gradient-accent {
+    background: linear-gradient(135deg, #110555, #25bed4) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+  }
+
+  .pdf-export #id-card-actions {
+    display: none !important;
+  }
+
+  .pdf-export.card-elevated {
+    box-shadow: none !important;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #id-card-print-container,
+  #id-card-print-container * {
+    visibility: visible;
+  }
+
+  #id-card-print-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Force page break between front and back */
+  .print-page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+}
