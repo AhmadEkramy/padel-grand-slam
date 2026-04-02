@@ -35,7 +35,7 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
 
   const hasConflict = () => {
     return bookings
-      .filter((b) => b.court === court && b.date === today && b.status !== "rejected")
+      .filter((b) => b.court === court && b.date === today && b.status !== "rejected" && b.status !== "cancelled")
       .some((b) => {
         return startHour < b.endHour && endHour > b.startHour;
       });

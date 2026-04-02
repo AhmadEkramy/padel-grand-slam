@@ -27,7 +27,7 @@ export default function CourtAvailability({ onSelectSlot }: Props) {
   const getBookedHours = (court: 1 | 2) => {
     const hours = new Set<number>();
     bookings
-      .filter((b) => b.court === court && b.date === dateStr && b.status !== "rejected")
+      .filter((b) => b.court === court && b.date === dateStr && b.status !== "rejected" && b.status !== "cancelled")
       .forEach((b) => {
         for (let h = b.startHour; h < b.endHour; h++) {
           hours.add(h);
