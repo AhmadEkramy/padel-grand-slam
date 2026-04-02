@@ -733,6 +733,7 @@ export default function AdminPage() {
                   <option value="accepted">Accepted</option>
                   <option value="pending">Pending</option>
                   <option value="rejected">Rejected</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </div>
             </div>
@@ -771,7 +772,8 @@ export default function AdminPage() {
                           <td className="py-3">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${b.status === "accepted" ? "bg-accent/20 text-accent" :
                               b.status === "rejected" ? "bg-destructive/20 text-destructive" :
-                                "bg-sky/20 text-sky"
+                                b.status === "cancelled" ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500" :
+                                  "bg-sky/20 text-sky"
                               }`}>
                               {b.status}
                             </span>
@@ -808,7 +810,8 @@ export default function AdminPage() {
                         </div>
                         <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${b.status === "accepted" ? "bg-accent/10 text-accent border border-accent/20" :
                           b.status === "rejected" ? "bg-destructive/10 text-destructive border border-destructive/20" :
-                            "bg-sky-500/10 text-sky-500 border border-sky-500/20"
+                            b.status === "cancelled" ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border border-yellow-500/20" :
+                              "bg-sky-500/10 text-sky-500 border border-sky-500/20"
                           }`}>
                           {b.status}
                         </span>

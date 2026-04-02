@@ -12,7 +12,7 @@ export interface Booking {
   endHour: number;
   date: string;
   price: number;
-  status: "pending" | "accepted" | "rejected";
+  status: "pending" | "accepted" | "rejected" | "cancelled";
   createdAt?: string;
 }
 

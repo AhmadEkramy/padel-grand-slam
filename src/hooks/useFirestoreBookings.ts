@@ -72,6 +72,22 @@ export function useFirestoreBookings() {
         await deleteDoc(doc(db, "bookings", id));
     }
 
+    // Cancel a booking from Firestore checking 5 hours difference
+    async function cancelBooking(id: string, dateStr: string, startHour: number) {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const startTime = new Date(year, month - 1, day, startHour, 0, 0);
+        const now = new Date();
+        
+        const diffMs = startTime.getTime() - now.getTime();
+        const diffHours = diffMs / (1000 * 60 * 60);
+
+        if (diffHours < 5) {
+            throw new Error("You cannot cancel this reservation less than 5 hours before the start time.");
+        }
+
+        await updateDoc(doc(db, "bookings", id), { status: "cancelled" });
+    }
+
     return {
         bookings,
         loading,
@@ -79,5 +95,6 @@ export function useFirestoreBookings() {
         addBooking,
         updateBookingStatus,
         removeBooking,
+        cancelBooking,
     };
 }

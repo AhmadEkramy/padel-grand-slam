@@ -56,7 +56,7 @@ const roleBadgeColors: Record<string, string> = {
 export default function ProfilePage() {
   const { lang } = useAppStore();
   const { username } = useParams();
-  const { bookings } = useFirestoreBookings();
+  const { bookings, cancelBooking } = useFirestoreBookings();
   const t = translations[lang].profile;
   const { appUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -242,6 +242,21 @@ export default function ProfilePage() {
     { name: 'Golden Badge', arName: 'الشارة الذهبية', discount: 50, cost: 50, color: 'text-amber-400', bg: 'from-amber-400/20 to-transparent', border: 'border-amber-400/30', glow: 'hover:shadow-[0_0_20px_rgba(251,191,36,0.3)]' },
     { name: 'Diamond Badge', arName: 'الشارة الماسية', discount: 100, cost: 100, color: 'text-cyan-400', bg: 'from-cyan-400/20 to-transparent', border: 'border-cyan-400/30', glow: 'hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]' },
   ];
+
+  const isCancelDisabled = (dateStr: string, startHour: number) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const startTime = new Date(year, month - 1, day, startHour, 0, 0);
+    const diffHours = (startTime.getTime() - new Date().getTime()) / (1000 * 60 * 60);
+    return diffHours < 5;
+  };
+
+  const handleCancel = async (id: string, dateStr: string, startHour: number) => {
+    try {
+      await cancelBooking(id, dateStr, startHour);
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -564,6 +579,7 @@ export default function ProfilePage() {
                         <th className="text-left py-4 px-2 text-muted-foreground font-medium">Time</th>
                         <th className="text-left py-4 px-2 text-muted-foreground font-medium">Price</th>
                         <th className="text-left py-4 px-2 text-muted-foreground font-medium">{t.status}</th>
+                        <th className="text-left py-4 px-2 text-muted-foreground font-medium">{lang === 'ar' ? 'الإجراءات' : 'Actions'}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -576,10 +592,22 @@ export default function ProfilePage() {
                           <td className="py-4 px-2">
                             <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${b.status === "accepted" ? "bg-accent/20 text-accent border border-accent/20" :
                               b.status === "rejected" ? "bg-destructive/20 text-destructive border border-destructive/20" :
-                                "bg-sky/20 text-sky border border-sky/20"
+                                b.status === "cancelled" ? "bg-gray-500/20 text-gray-500 border border-gray-500/20" :
+                                  "bg-sky/20 text-sky border border-sky/20"
                               }`}>
-                              {(t as any)[b.status]}
+                              {(t as any)[b.status] || b.status}
                             </span>
+                          </td>
+                          <td className="py-4 px-2">
+                            {(b.status === "pending" || b.status === "accepted") && (
+                                <button
+                                  onClick={() => handleCancel(b.id, b.date, b.startHour)}
+                                  disabled={isCancelDisabled(b.date, b.startHour)}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground border border-destructive/20"
+                                >
+                                  {lang === 'ar' ? 'إلغاء' : 'Cancel'}
+                                </button>
+                            )}
                           </td>
                         </tr>
                       ))}

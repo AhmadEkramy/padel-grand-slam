@@ -115,7 +115,7 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
 
             <div>
               <label className="text-xs md:text-sm text-muted-foreground">{t.phone}</label>
-              <input value={phone} onChange={(e) => setPhone(e.target.value)} required className="w-full mt-1 px-3 py-2 rounded-lg bg-muted/50 border border-border focus:border-accent focus:outline-none transition-all duration-300 text-sm" />
+              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} required className="w-full mt-1 px-3 py-2 rounded-lg bg-muted/50 border border-border focus:border-accent focus:outline-none transition-all duration-300 text-sm" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
