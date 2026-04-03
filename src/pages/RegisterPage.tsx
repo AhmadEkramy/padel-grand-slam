@@ -76,7 +76,13 @@ export default function RegisterPage() {
           </div>
           <div>
             <label className="text-sm text-muted-foreground">{t.phone}</label>
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} required className="w-full mt-1 px-4 py-2.5 rounded-lg bg-muted/50 border border-border focus:border-accent focus:outline-none transition-all duration-300" />
+            <input 
+              type="tel" 
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))} 
+              required 
+              className="w-full mt-1 px-4 py-2.5 rounded-lg bg-muted/50 border border-border focus:border-accent focus:outline-none transition-all duration-300" 
+            />
           </div>
           <div>
             <label className="text-sm text-muted-foreground">{t.email}</label>
