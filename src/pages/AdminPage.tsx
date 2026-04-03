@@ -41,7 +41,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState("");
-  const [filterDate, setFilterDate] = useState("");
+  const [filterDate, setFilterDate] = useState(new Date().toISOString().split("T")[0]);
   const [filterCourt, setFilterCourt] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedUserForBadge, setSelectedUserForBadge] = useState<any>(null);
