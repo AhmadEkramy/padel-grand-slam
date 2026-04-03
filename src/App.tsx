@@ -15,6 +15,8 @@ import AdminPage from "./pages/AdminPage";
 import ShopPage from "./pages/ShopPage";
 import ChampionshipsPage from "./pages/ChampionshipsPage";
 import NotFound from "./pages/NotFound";
+import SuspendedPage from "./pages/SuspendedPage";
+import SuspendedGuard from "./components/SuspendedGuard";
 
 const queryClient = new QueryClient();
 
@@ -27,20 +29,23 @@ function AppInner() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/court" element={<Index />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/:username" element={<ProfilePage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/shop" element={<ShopPage />} />
-            <Route path="/championships" element={<ChampionshipsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
+        <SuspendedGuard>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/court" element={<Index />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/:username" element={<ProfilePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/shop" element={<ShopPage />} />
+              <Route path="/championships" element={<ChampionshipsPage />} />
+              <Route path="/suspended" element={<SuspendedPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </SuspendedGuard>
       </AuthProvider>
     </BrowserRouter>
   );

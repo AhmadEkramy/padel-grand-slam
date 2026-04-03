@@ -6,7 +6,7 @@ import {
     signOut,
     type User as FirebaseUser,
 } from "firebase/auth";
-import { doc, setDoc, getDoc, serverTimestamp, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, setDoc, getDoc, onSnapshot, serverTimestamp, query, collection, where, getDocs } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
 export type UserRole = "user" | "admin" | "moderator";
@@ -179,31 +179,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen to auth state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        let unsubscribeDoc: (() => void) | undefined;
+
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
+            
+            if (unsubscribeDoc) unsubscribeDoc();
+
             if (user) {
-                try {
-                    const userData = await fetchUserDoc(user.uid);
-                    setAppUser(userData);
-                } catch (err) {
-                    console.warn("Could not fetch user doc on auth change:", err);
-                    // Set a basic user from auth data
-                    setAppUser({
-                        uid: user.uid,
-                        username: user.uid.substring(0, 8),
-                        name: user.displayName || "Player",
-                        email: user.email || "",
-                        phone: "",
-                        role: "user",
-                        memberSince: new Date().toISOString().split("T")[0],
-                    });
-                }
+                // Set up snapshot listener for real-time updates (e.g. suspension)
+                unsubscribeDoc = onSnapshot(doc(db, "users", user.uid), (snap) => {
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        setAppUser({
+                            uid: snap.id,
+                            username: data.username || "",
+                            name: data.name,
+                            email: data.email,
+                            phone: data.phone,
+                            role: data.role as UserRole,
+                            memberSince: data.memberSince,
+                            photoURL: data.photoURL || null,
+                            spentCoins: data.spentCoins || 0,
+                            activeBadges: data.activeBadges || [],
+                            isSuspended: data.isSuspended || false,
+                            discountPercentage: data.discountPercentage || 0,
+                        });
+                    } else {
+                         // If doc doesn't exist, set basic info from auth
+                         setAppUser({
+                            uid: user.uid,
+                            username: user.uid.substring(0, 8),
+                            name: user.displayName || "Player",
+                            email: user.email || "",
+                            phone: "",
+                            role: "user",
+                            memberSince: new Date().toISOString().split("T")[0],
+                        });
+                    }
+                    setLoading(false);
+                }, (error) => {
+                    console.error("User snapshot error:", error);
+                    setLoading(false);
+                });
             } else {
                 setAppUser(null);
+                setLoading(false);
             }
-            setLoading(false);
         });
-        return unsubscribe;
+
+        return () => {
+            unsubscribeAuth();
+            if (unsubscribeDoc) unsubscribeDoc();
+        };
     }, []);
 
     const value: AuthContextType = {

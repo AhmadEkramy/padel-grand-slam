@@ -47,6 +47,8 @@ export default function AdminPage() {
   const [selectedUserForBadge, setSelectedUserForBadge] = useState<any>(null);
   const [userSearchQuery, setUserSearchQuery] = useState("");
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [userDeleteConfirm, setUserDeleteConfirm] = useState<string | null>(null);
+  const [suspensionConfirm, setSuspensionConfirm] = useState<{ uid: string; status: boolean } | null>(null);
 
   const [activeTab, setActiveTab] = useState<"reservations" | "analytics" | "users" | "reports" | "shop" | "sponsors" | "trainings" | "championships" | "championship_requests">("reservations");
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
@@ -260,23 +262,33 @@ export default function AdminPage() {
     }
   };
 
-  const handleUserDelete = async (uid: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      try {
-        await deleteUser(uid);
-      } catch (err) {
-        console.error("Failed to delete user:", err);
-      }
+  const handleUserDelete = (uid: string) => {
+    setUserDeleteConfirm(uid);
+  };
+
+  const confirmUserDelete = async () => {
+    if (!userDeleteConfirm) return;
+    try {
+      await deleteUser(userDeleteConfirm);
+    } catch (err) {
+      console.error("Failed to delete user:", err);
+    } finally {
+      setUserDeleteConfirm(null);
     }
   };
 
-  const handleToggleSuspension = async (uid: string, currentStatus: boolean) => {
-    if (confirm(t.confirmSuspension)) {
-      try {
-        await toggleSuspension(uid, currentStatus);
-      } catch (err) {
-        console.error("Failed to toggle suspension:", err);
-      }
+  const handleToggleSuspension = (uid: string, currentStatus: boolean) => {
+    setSuspensionConfirm({ uid, status: currentStatus });
+  };
+
+  const confirmSuspension = async () => {
+    if (!suspensionConfirm) return;
+    try {
+      await toggleSuspension(suspensionConfirm.uid, suspensionConfirm.status);
+    } catch (err) {
+      console.error("Failed to toggle suspension:", err);
+    } finally {
+      setSuspensionConfirm(null);
     }
   };
 
@@ -1841,6 +1853,81 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+
+      {/* User Delete Confirmation Modal */}
+      {userDeleteConfirm && (
+        <div className="fixed inset-0 z-[101] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-700 animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
+                <Trash2 className="w-8 h-8 text-destructive" />
+              </div>
+              <h3 className="font-heading text-xl font-black text-slate-900 dark:text-white mb-2">
+                {lang === 'ar' ? 'حذف المستخدم' : 'Delete User'}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+                {lang === 'ar'
+                  ? 'هل أنت متأكد من حذف هذا المستخدم نهائياً؟ هذا الإجراء سيقوم بمسح كافة بياناته ولا يمكن التراجع عنه.'
+                  : 'Are you sure you want to permanently delete this user? This action will erase all their data and cannot be undone.'}
+              </p>
+              <div className="flex gap-3 w-full">
+                <button
+                  onClick={() => setUserDeleteConfirm(null)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-all active:scale-95"
+                >
+                  {lang === 'ar' ? 'إلغاء' : 'Cancel'}
+                </button>
+                <button
+                  onClick={confirmUserDelete}
+                  className="flex-1 py-3 rounded-xl bg-destructive text-white font-bold text-sm hover:bg-destructive/90 transition-all active:scale-95 shadow-lg shadow-destructive/20"
+                >
+                  {lang === 'ar' ? 'حذف' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Suspension Confirmation Modal */}
+      {suspensionConfirm && (
+        <div className="fixed inset-0 z-[101] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-700 animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mb-5">
+                <ShieldAlert className="w-8 h-8 text-amber-500" />
+              </div>
+              <h3 className="font-heading text-xl font-black text-slate-900 dark:text-white mb-2">
+                {lang === 'ar' ? 'تعديل حالة الحساب' : 'Change Account Status'}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+                {lang === 'ar'
+                  ? `هل أنت متأكد من ${suspensionConfirm.status ? 'إلغاء حظر' : 'حظر'} هذا المستخدم؟`
+                  : `Are you sure you want to ${suspensionConfirm.status ? 'unblock' : 'block'} this user?`}
+              </p>
+              <div className="flex gap-3 w-full">
+                <button
+                  onClick={() => setSuspensionConfirm(null)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-all active:scale-95"
+                >
+                  {lang === 'ar' ? 'إلغاء' : 'Cancel'}
+                </button>
+                <button
+                  onClick={confirmSuspension}
+                  className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg ${
+                    suspensionConfirm.status 
+                    ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/20' 
+                    : 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/20'
+                  }`}
+                >
+                  {lang === 'ar' ? (suspensionConfirm.status ? 'تفعيل' : 'حظر') : (suspensionConfirm.status ? 'Unblock' : 'Block')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
