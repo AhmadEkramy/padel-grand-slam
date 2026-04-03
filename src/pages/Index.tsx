@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { useAppStore } from "@/lib/store";
 import { translations } from "@/lib/translations";
 import CourtAvailability from "@/components/CourtAvailability";
@@ -10,12 +11,21 @@ import PadelShopSection from "@/components/PadelShopSection";
 import TrainingSection from "@/components/TrainingSection";
 import ChampionshipsSection from "@/components/ChampionshipsSection";
 import Footer from "@/components/Footer";
-
 export default function Index() {
   const { lang } = useAppStore();
   const t = translations[lang].hero;
   const ct = translations[lang].court;
+  const navigate = useNavigate();
+  const { appUser } = useAuth();
   const [bookingState, setBookingState] = useState<{ court: 1 | 2; hour: number } | null>(null);
+
+  const handleSelectSlot = (court: 1 | 2, hour: number) => {
+    if (!appUser) {
+      navigate("/login");
+      return;
+    }
+    setBookingState({ court, hour });
+  };
 
   const location = useLocation();
 
@@ -93,7 +103,7 @@ export default function Index() {
 
       {/* Court Availability */}
       <div id="courts">
-        <CourtAvailability onSelectSlot={(court, hour) => setBookingState({ court, hour })} />
+        <CourtAvailability onSelectSlot={handleSelectSlot} />
       </div>
 
       <Packages />

@@ -78,6 +78,12 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
       }
 
       setSuccess(true);
+      
+      const whatsappPhone = "201006115163";
+      const formatType = type === 'vip' ? 'VIP' : type.replace('h', 'hour');
+      const message = `New Booking:\nName: ${name}\nPhone: ${phone}\nCourt: ${court}\nDate: ${today}\nStart Time: ${formatHour(startHour)}\nEnd Time: ${formatHour(endHour)}\nType: ${formatType}\nPrice: ${finalPrice}EGP`;
+      const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+      window.location.href = whatsappUrl;
     } catch (err: any) {
       console.error("Failed to create booking:", err);
       setError(err.message || "Failed to create booking. Please try again.");
