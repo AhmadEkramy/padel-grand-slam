@@ -9,7 +9,7 @@ import html2pdf from "html2pdf.js";
 
 import { doc, updateDoc, getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { formatHour } from "@/lib/utils";
+import { formatHour, formatLocalDate } from "@/lib/utils";
 import { Trophy, Clock, Calendar, Banknote, RefreshCw, QrCode, Flame, Award, Crown, Star, Lock } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
@@ -65,7 +65,7 @@ export default function ProfilePage() {
   const [profileLoading, setProfileLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [filterDate, setFilterDate] = useState(new Date().toISOString().split("T")[0]);
+  const [filterDate, setFilterDate] = useState(formatLocalDate());
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
 
@@ -202,7 +202,8 @@ export default function ProfilePage() {
 
   const dayCounts: Record<string, number> = {};
   acceptedBookings.forEach(b => {
-    const day = new Date(b.date).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long' });
+    const [y, m, d] = b.date.split("-").map(Number);
+    const day = new Date(y, m - 1, d).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long' });
     dayCounts[day] = (dayCounts[day] || 0) + 1;
   });
   let mostPlayedDay = "-";
@@ -600,13 +601,13 @@ export default function ProfilePage() {
                           </td>
                           <td className="py-4 px-2">
                             {(b.status === "pending" || b.status === "accepted") && (
-                                <button
-                                  onClick={() => handleCancel(b.id, b.date, b.startHour)}
-                                  disabled={isCancelDisabled(b.date, b.startHour)}
-                                  className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground border border-destructive/20"
-                                >
-                                  {lang === 'ar' ? 'إلغاء' : 'Cancel'}
-                                </button>
+                              <button
+                                onClick={() => handleCancel(b.id, b.date, b.startHour)}
+                                disabled={isCancelDisabled(b.date, b.startHour)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground border border-destructive/20"
+                              >
+                                {lang === 'ar' ? 'إلغاء' : 'Cancel'}
+                              </button>
                             )}
                           </td>
                         </tr>

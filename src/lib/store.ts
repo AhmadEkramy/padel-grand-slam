@@ -14,6 +14,7 @@ export interface Booking {
   price: number;
   status: "pending" | "accepted" | "rejected" | "cancelled";
   createdAt?: string;
+  discountBadge?: number;
 }
 
 export interface User {
@@ -59,47 +60,47 @@ const sampleBookings: Booking[] = [
 ];
 
 const initialProducts: Product[] = [
-  { 
+  {
     id: "1",
-    name: "Pro Padel Racket", 
-    price: "2,500 EGP", 
+    name: "Pro Padel Racket",
+    price: "2,500 EGP",
     description: "High-performance carbon fiber racket for professional play.",
-    img: "https://images.unsplash.com/photo-1622279457486-640c4cb71652?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1622279457486-640c4cb71652?auto=format&fit=crop&q=80&w=800"
   },
-  { 
+  {
     id: "2",
-    name: "Premium Padel Balls (3)", 
-    price: "350 EGP", 
+    name: "Premium Padel Balls (3)",
+    price: "350 EGP",
     description: "Tournament quality padel balls with maximum durability.",
-    img: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=800"
   },
-  { 
+  {
     id: "3",
-    name: "Court Shoes", 
-    price: "1,800 EGP", 
+    name: "Court Shoes",
+    price: "1,800 EGP",
     description: "Lightweight, breathable shoes with excellent grip for padel courts.",
-    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800"
   },
-  { 
+  {
     id: "4",
-    name: "Sports Bag", 
-    price: "900 EGP", 
+    name: "Sports Bag",
+    price: "900 EGP",
     description: "Spacious bag to carry your racket, shoes, and accessories.",
-    img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800"
   },
-  { 
+  {
     id: "5",
-    name: "Wristband Set", 
-    price: "150 EGP", 
+    name: "Wristband Set",
+    price: "150 EGP",
     description: "Absorbent wristbands for a comfortable and dry grip.",
-    img: "https://images.unsplash.com/photo-1616616422345-0d4872c050a4?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1616616422345-0d4872c050a4?auto=format&fit=crop&q=80&w=800"
   },
-  { 
+  {
     id: "6",
-    name: "Grand Slam Jersey", 
-    price: "650 EGP", 
+    name: "Grand Slam Jersey",
+    price: "650 EGP",
     description: "Premium breathable jersey with Grand Slam Padel branding.",
-    img: "https://images.unsplash.com/photo-1571513800374-df1bbe650e56?auto=format&fit=crop&q=80&w=800" 
+    img: "https://images.unsplash.com/photo-1571513800374-df1bbe650e56?auto=format&fit=crop&q=80&w=800"
   },
 ];
 

@@ -12,7 +12,7 @@ import { translations } from "@/lib/translations";
 import { DollarSign, CalendarCheck, Trophy, Package, Users, TrendingUp, Check, X, Trash2, ShieldAlert, Loader2, Search, Filter, Ban, BadgePercent, CheckCircle, Sparkles, HeartHandshake, Dumbbell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { isThisWeek, isThisMonth, parseISO, subMonths, isSameMonth, startOfMonth, endOfMonth, format, subDays } from "date-fns";
-import { formatHour } from "@/lib/utils";
+import { formatHour, formatLocalDate } from "@/lib/utils";
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -41,7 +41,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState("");
-  const [filterDate, setFilterDate] = useState(new Date().toISOString().split("T")[0]);
+  const [filterDate, setFilterDate] = useState(formatLocalDate());
   const [filterCourt, setFilterCourt] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedUserForBadge, setSelectedUserForBadge] = useState<any>(null);
@@ -188,7 +188,7 @@ export default function AdminPage() {
   const accepted = bookings.filter((b) => b.status === "accepted");
   const totalRevenue = accepted.reduce((s, b) => s + b.price, 0);
 
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = formatLocalDate();
   const todayRevenue = accepted.filter((b) => b.date === todayStr).reduce((s, b) => s + b.price, 0);
   const weekRevenue = accepted.filter((b) => b.date && isThisWeek(parseISO(b.date))).reduce((s, b) => s + b.price, 0);
   const monthRevenue = accepted.filter((b) => b.date && isThisMonth(parseISO(b.date))).reduce((s, b) => s + b.price, 0);
@@ -430,8 +430,8 @@ export default function AdminPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             <button
               onClick={() => setActiveTab("reservations")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "reservations" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "reservations"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -442,8 +442,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("analytics")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "analytics" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "analytics"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -454,8 +454,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("users")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "users" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "users"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -466,8 +466,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("reports")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "reports" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "reports"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -478,8 +478,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("shop")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "shop" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "shop"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -490,8 +490,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("sponsors")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "sponsors" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "sponsors"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -502,8 +502,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("trainings")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "trainings" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "trainings"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -514,8 +514,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("championships")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "championships" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "championships"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -526,8 +526,8 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab("championship_requests")}
-              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "championship_requests" 
-                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20" 
+              className={`flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-black transition-all duration-300 border-2 ${activeTab === "championship_requests"
+                ? "bg-accent border-accent text-accent-foreground shadow-lg shadow-accent/20"
                 : "bg-slate-50 dark:bg-slate-800/50 border-transparent text-slate-400 hover:border-slate-200"
                 }`}
             >
@@ -1007,127 +1007,127 @@ export default function AdminPage() {
                                         onClick={() => handleToggleSuspension(user.uid, user.isSuspended || false)}
                                         className={`p-1.5 rounded-lg transition-colors ${user.isSuspended ? "hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-600" : "hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600"}`}
                                         title={user.isSuspended ? t.activate : t.suspend}
-                                    >
-                                      {user.isSuspended ? <CheckCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-                                    </button>
-                                    <button
-                                      onClick={() => handleUserDelete(user.uid)}
-                                      className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 transition-colors"
-                                      title={t.delete}
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                                      >
+                                        {user.isSuspended ? <CheckCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
+                                      </button>
+                                      <button
+                                        onClick={() => handleUserDelete(user.uid)}
+                                        className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 transition-colors"
+                                        title={t.delete}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
 
-                {/* Mobile View */}
-                <div className="md:hidden grid grid-cols-1 gap-4 mt-2">
-                  {filteredUsers.map((user) => {
-                    const userBookings = accepted.filter(b => b.phone === user.phone || b.name === user.name);
-                    const userTotalPaid = userBookings.reduce((s, b) => s + b.price, 0);
+                  {/* Mobile View */}
+                  <div className="md:hidden grid grid-cols-1 gap-4 mt-2">
+                    {filteredUsers.map((user) => {
+                      const userBookings = accepted.filter(b => b.phone === user.phone || b.name === user.name);
+                      const userTotalPaid = userBookings.reduce((s, b) => s + b.price, 0);
 
-                    return (
-                      <div key={user.uid} className={`bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800/60 shadow-sm flex flex-col gap-4 ${user.isSuspended ? "opacity-70 bg-rose-50/30 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30" : ""}`}>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="font-bold text-slate-800 dark:text-white text-base">{user.name}</p>
-                            <p className="text-[11px] text-slate-400 font-bold tracking-widest">{user.phone || "N/A"}</p>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 text-accent">{t.joined}: {user.memberSince}</p>
-                          </div>
-                          <div className="flex flex-col items-end gap-1.5">
-                            <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider leading-none ${user.role === "admin" ? "bg-accent/20 text-accent border border-accent/30" :
-                              user.role === "moderator" ? "bg-sky-500/20 text-sky-500 border border-sky-500/30" :
-                                "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
-                              }`}>
-                              {user.role}
-                            </span>
-                            {user.isSuspended && (
-                              <span className="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider leading-none bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
-                                Suspended
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 text-sm bg-white dark:bg-slate-800/80 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
-                          <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">{t.bookings}</p>
-                            <p className="font-bold text-slate-700 dark:text-slate-300 text-lg">{userBookings.length}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">{t.totalPaid}</p>
-                            <p className="font-black text-emerald-600 dark:text-emerald-400 text-lg">{userTotalPaid} <span className="text-xs">EGP</span></p>
-                          </div>
-                          <div className="col-span-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5">{t.badges}</p>
-                            <div className="flex flex-wrap gap-1 min-h-[1.25rem] mb-2">
-                              {BADGE_TYPES.map((bt) => {
-                                const count = (user.activeBadges || []).filter((id: number) => id === bt.id).length;
-                                if (count === 0) return null;
-                                return (
-                                  <div key={bt.id} className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-black shadow-sm ${bt.bg} ${bt.color} ${bt.border} animate-in zoom-in-50`}>
-                                    <Sparkles className="w-2.5 h-2.5" />
-                                    <span>{count}</span>
-                                  </div>
-                                );
-                              })}
+                      return (
+                        <div key={user.uid} className={`bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800/60 shadow-sm flex flex-col gap-4 ${user.isSuspended ? "opacity-70 bg-rose-50/30 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30" : ""}`}>
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-bold text-slate-800 dark:text-white text-base">{user.name}</p>
+                              <p className="text-[11px] text-slate-400 font-bold tracking-widest">{user.phone || "N/A"}</p>
+                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 text-accent">{t.joined}: {user.memberSince}</p>
                             </div>
-                            <button
-                              onClick={() => setSelectedUserForBadge(user)}
-                              className="w-full py-2.5 rounded-lg border border-accent/30 bg-accent/10 text-accent text-[10px] font-black uppercase hover:bg-accent hover:text-accent-foreground transition-all flex items-center justify-center gap-2"
-                            >
-                              <Sparkles className="w-3 h-3" />
-                              {t.addBadge}
-                            </button>
+                            <div className="flex flex-col items-end gap-1.5">
+                              <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider leading-none ${user.role === "admin" ? "bg-accent/20 text-accent border border-accent/30" :
+                                user.role === "moderator" ? "bg-sky-500/20 text-sky-500 border border-sky-500/30" :
+                                  "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
+                                }`}>
+                                {user.role}
+                              </span>
+                              {user.isSuspended && (
+                                <span className="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider leading-none bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
+                                  Suspended
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        {appUser.role === "admin" && user.uid !== appUser.uid && (
-                          <div className="flex gap-2 justify-end pt-2 border-t border-slate-200 dark:border-slate-700">
-                            <button
-                              onClick={() => {
-                                const roles: UserRole[] = ["user", "moderator", "admin"];
-                                const currentIndex = roles.indexOf(user.role);
-                                const nextRole = roles[(currentIndex + 1) % roles.length];
-                                handleUserRoleUpdate(user.uid, nextRole);
-                              }}
-                              className="flex-1 p-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent transition-colors flex items-center justify-center gap-1 text-xs font-bold"
-                              title={t.changeRole}
-                            >
-                              <ShieldAlert className="w-3 h-3" /> Role
-                            </button>
-                            <button
-                              onClick={() => handleToggleSuspension(user.uid, user.isSuspended || false)}
-                              className={`flex-1 p-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs font-bold ${user.isSuspended ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600" : "bg-rose-100 dark:bg-rose-900/40 text-rose-600"}`}
-                              title={user.isSuspended ? t.activate : t.suspend}
-                            >
-                              {user.isSuspended ? <><CheckCircle className="w-3 h-3" /> Reactivate</> : <><Ban className="w-3 h-3" /> Suspend</>}
-                            </button>
-                            <button
-                              onClick={() => handleUserDelete(user.uid)}
-                              className="p-2 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-600 hover:opacity-80 transition-colors flex items-center justify-center"
-                              title={t.delete}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                          <div className="grid grid-cols-2 gap-3 text-sm bg-white dark:bg-slate-800/80 p-3 rounded-lg border border-slate-100 dark:border-slate-700/50">
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">{t.bookings}</p>
+                              <p className="font-bold text-slate-700 dark:text-slate-300 text-lg">{userBookings.length}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">{t.totalPaid}</p>
+                              <p className="font-black text-emerald-600 dark:text-emerald-400 text-lg">{userTotalPaid} <span className="text-xs">EGP</span></p>
+                            </div>
+                            <div className="col-span-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5">{t.badges}</p>
+                              <div className="flex flex-wrap gap-1 min-h-[1.25rem] mb-2">
+                                {BADGE_TYPES.map((bt) => {
+                                  const count = (user.activeBadges || []).filter((id: number) => id === bt.id).length;
+                                  if (count === 0) return null;
+                                  return (
+                                    <div key={bt.id} className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-black shadow-sm ${bt.bg} ${bt.color} ${bt.border} animate-in zoom-in-50`}>
+                                      <Sparkles className="w-2.5 h-2.5" />
+                                      <span>{count}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              <button
+                                onClick={() => setSelectedUserForBadge(user)}
+                                className="w-full py-2.5 rounded-lg border border-accent/30 bg-accent/10 text-accent text-[10px] font-black uppercase hover:bg-accent hover:text-accent-foreground transition-all flex items-center justify-center gap-2"
+                              >
+                                <Sparkles className="w-3 h-3" />
+                                {t.addBadge}
+                              </button>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            );
-          })()}
-        </div>
+
+                          {appUser.role === "admin" && user.uid !== appUser.uid && (
+                            <div className="flex gap-2 justify-end pt-2 border-t border-slate-200 dark:border-slate-700">
+                              <button
+                                onClick={() => {
+                                  const roles: UserRole[] = ["user", "moderator", "admin"];
+                                  const currentIndex = roles.indexOf(user.role);
+                                  const nextRole = roles[(currentIndex + 1) % roles.length];
+                                  handleUserRoleUpdate(user.uid, nextRole);
+                                }}
+                                className="flex-1 p-2 rounded-lg bg-accent/10 hover:bg-accent/20 text-accent transition-colors flex items-center justify-center gap-1 text-xs font-bold"
+                                title={t.changeRole}
+                              >
+                                <ShieldAlert className="w-3 h-3" /> Role
+                              </button>
+                              <button
+                                onClick={() => handleToggleSuspension(user.uid, user.isSuspended || false)}
+                                className={`flex-1 p-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs font-bold ${user.isSuspended ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600" : "bg-rose-100 dark:bg-rose-900/40 text-rose-600"}`}
+                                title={user.isSuspended ? t.activate : t.suspend}
+                              >
+                                {user.isSuspended ? <><CheckCircle className="w-3 h-3" /> Reactivate</> : <><Ban className="w-3 h-3" /> Suspend</>}
+                              </button>
+                              <button
+                                onClick={() => handleUserDelete(user.uid)}
+                                className="p-2 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-600 hover:opacity-80 transition-colors flex items-center justify-center"
+                                title={t.delete}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
       )}
 
@@ -1914,11 +1914,10 @@ export default function AdminPage() {
                 </button>
                 <button
                   onClick={confirmSuspension}
-                  className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg ${
-                    suspensionConfirm.status 
-                    ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/20' 
-                    : 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/20'
-                  }`}
+                  className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg ${suspensionConfirm.status
+                      ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/20'
+                      : 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-500/20'
+                    }`}
                 >
                   {lang === 'ar' ? (suspensionConfirm.status ? 'تفعيل' : 'حظر') : (suspensionConfirm.status ? 'Unblock' : 'Block')}
                 </button>

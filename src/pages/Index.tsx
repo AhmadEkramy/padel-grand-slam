@@ -17,14 +17,14 @@ export default function Index() {
   const ct = translations[lang].court;
   const navigate = useNavigate();
   const { appUser } = useAuth();
-  const [bookingState, setBookingState] = useState<{ court: 1 | 2; hour: number } | null>(null);
+  const [bookingState, setBookingState] = useState<{ court: 1 | 2; hour: number; date: string } | null>(null);
 
-  const handleSelectSlot = (court: 1 | 2, hour: number) => {
+  const handleSelectSlot = (court: 1 | 2, hour: number, date: string) => {
     if (!appUser) {
       navigate("/login");
       return;
     }
-    setBookingState({ court, hour });
+    setBookingState({ court, hour, date });
   };
 
   const location = useLocation();
@@ -120,6 +120,7 @@ export default function Index() {
         <BookingModal
           court={bookingState.court}
           startHour={bookingState.hour}
+          date={bookingState.date}
           onClose={() => setBookingState(null)}
         />
       )}

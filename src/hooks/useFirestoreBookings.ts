@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Booking } from "@/lib/store";
+import { normalizeDateString } from "@/lib/utils";
 
 export function useFirestoreBookings() {
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -34,7 +35,7 @@ export function useFirestoreBookings() {
                         type: d.type as Booking["type"],
                         startHour: d.startHour,
                         endHour: d.endHour,
-                        date: d.date || "",
+                        date: normalizeDateString(d.date),
                         price: d.price || 0,
                         status: (d.status || "pending") as Booking["status"],
                         createdAt: d.createdAt?.toDate?.()?.toISOString() || null,
@@ -77,7 +78,7 @@ export function useFirestoreBookings() {
         const [year, month, day] = dateStr.split('-').map(Number);
         const startTime = new Date(year, month - 1, day, startHour, 0, 0);
         const now = new Date();
-        
+
         const diffMs = startTime.getTime() - now.getTime();
         const diffHours = diffMs / (1000 * 60 * 60);
 

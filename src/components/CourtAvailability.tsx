@@ -4,7 +4,7 @@ import { CalendarIcon, MapPin, CalendarDays, Loader2 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { useFirestoreBookings } from "@/hooks/useFirestoreBookings";
 import { translations } from "@/lib/translations";
-import { cn, formatHour } from "@/lib/utils";
+import { cn, formatHour, formatLocalDate, normalizeDateString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 
 interface Props {
-  onSelectSlot: (court: 1 | 2, hour: number) => void;
+  onSelectSlot: (court: 1 | 2, hour: number, date: string) => void;
 }
 
 export default function CourtAvailability({ onSelectSlot }: Props) {
@@ -22,12 +22,12 @@ export default function CourtAvailability({ onSelectSlot }: Props) {
   const { bookings, loading } = useFirestoreBookings();
   const t = translations[lang].court;
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const dateStr = selectedDate.toISOString().split("T")[0];
+  const dateStr = formatLocalDate(selectedDate);
 
   const getBookedHours = (court: 1 | 2) => {
     const hours = new Set<number>();
     bookings
-      .filter((b) => b.court === court && b.date === dateStr && b.status !== "rejected" && b.status !== "cancelled")
+      .filter((b) => b.court === court && normalizeDateString(b.date) === dateStr && b.status !== "rejected" && b.status !== "cancelled")
       .forEach((b) => {
         for (let h = b.startHour; h < b.endHour; h++) {
           hours.add(h);
@@ -114,7 +114,7 @@ export default function CourtAvailability({ onSelectSlot }: Props) {
                           <button
                             key={h}
                             disabled={isBooked}
-                            onClick={() => onSelectSlot(court, h)}
+                            onClick={() => onSelectSlot(court, h, dateStr)}
                             className={cn(
                               "py-2.5 px-2 rounded-lg text-sm font-medium transition-all duration-300 border-2",
                               isBooked

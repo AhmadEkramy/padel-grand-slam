@@ -6,7 +6,7 @@ import { translations } from "@/lib/translations";
 import { X, CheckCircle, Loader2, Tag, Sparkles } from "lucide-react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { formatHour } from "@/lib/utils";
+import { formatHour, normalizeDateString } from "@/lib/utils";
 
 const prices = { "1h": 300, "2h": 500, "3h": 750, vip: 950 };
 const durations = { "1h": 1, "2h": 2, "3h": 3, vip: 4 };
@@ -14,10 +14,11 @@ const durations = { "1h": 1, "2h": 2, "3h": 3, vip: 4 };
 interface Props {
   court: 1 | 2;
   startHour: number;
+  date: string;
   onClose: () => void;
 }
 
-export default function BookingModal({ court, startHour, onClose }: Props) {
+export default function BookingModal({ court, startHour, date, onClose }: Props) {
   const { lang } = useAppStore();
   const { bookings, addBooking } = useFirestoreBookings();
   const { appUser } = useAuth();
@@ -29,13 +30,18 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [selectedBadge, setSelectedBadge] = useState<number | "">("");
+  const normalizedSelectedDate = normalizeDateString(date);
 
   const endHour = startHour + durations[type];
-  const today = new Date().toISOString().split("T")[0];
 
   const hasConflict = () => {
     return bookings
-      .filter((b) => b.court === court && b.date === today && b.status !== "rejected" && b.status !== "cancelled")
+      .filter((b) => {
+        const isSameCourt = Number(b.court) === Number(court);
+        const isSameDate = normalizeDateString(b.date) === normalizedSelectedDate;
+        const isNotRejected = b.status !== "rejected" && b.status !== "cancelled";
+        return isSameCourt && isSameDate && isNotRejected;
+      })
       .some((b) => {
         return startHour < b.endHour && endHour > b.startHour;
       });
@@ -61,7 +67,7 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
         type,
         startHour,
         endHour,
-        date: today,
+        date: normalizedSelectedDate,
         price: finalPrice,
         status: "pending",
       });
@@ -78,10 +84,10 @@ export default function BookingModal({ court, startHour, onClose }: Props) {
       }
 
       setSuccess(true);
-      
+
       const whatsappPhone = "201006115163";
       const formatType = type === 'vip' ? 'VIP' : type.replace('h', 'hour');
-      const message = `New Booking:\nName: ${name}\nPhone: ${phone}\nCourt: ${court}\nDate: ${today}\nStart Time: ${formatHour(startHour)}\nEnd Time: ${formatHour(endHour)}\nType: ${formatType}\nPrice: ${finalPrice}EGP`;
+      const message = `New Booking:\nName: ${name}\nPhone: ${phone}\nCourt: ${court}\nDate: ${date}\nStart Time: ${formatHour(startHour)}\nEnd Time: ${formatHour(endHour)}\nType: ${formatType}\nPrice: ${finalPrice}EGP`;
       const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
       window.location.href = whatsappUrl;
     } catch (err: any) {
