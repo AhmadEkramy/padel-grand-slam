@@ -928,6 +928,7 @@ export default function AdminPage() {
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.phone}</th>
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.bookings}</th>
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.totalPaid}</th>
+                          <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">Padel Coins</th>
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.badges}</th>
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.role}</th>
                           <th className="py-3 text-slate-400 font-black uppercase tracking-widest text-[10px]">{t.status}</th>
@@ -938,12 +939,21 @@ export default function AdminPage() {
                         {filteredUsers.map((user) => {
                           const userBookings = accepted.filter(b => b.phone === user.phone || b.name === user.name);
                           const userTotalPaid = userBookings.reduce((s, b) => s + b.price, 0);
+                          const userPadelCoins = userBookings.length - (user.spentCoins || 0);
+                          const userProfilePath = user.username ? `/profile/${user.username}` : "";
 
                           return (
                             <tr key={user.uid} className={`border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors ${user.isSuspended ? "bg-rose-50/30 dark:bg-rose-900/10 opacity-80" : ""}`}>
                               <td className="py-4 font-bold">
                                 <div className="flex flex-col">
-                                  <span className="text-slate-800 dark:text-white">{user.name}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => userProfilePath && navigate(userProfilePath)}
+                                    disabled={!userProfilePath}
+                                    className="text-left text-slate-800 dark:text-white hover:text-accent transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                  >
+                                    {user.name}
+                                  </button>
                                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t.joined}: {user.memberSince}</span>
                                 </div>
                               </td>
@@ -951,6 +961,7 @@ export default function AdminPage() {
                               <td className="py-4 text-slate-400 dark:text-slate-500 font-bold">{user.phone || "N/A"}</td>
                               <td className="py-4 font-black text-slate-900 dark:text-white">{userBookings.length}</td>
                               <td className="py-4 font-black text-emerald-600 dark:text-emerald-400">{userTotalPaid} EGP</td>
+                              <td className="py-4 font-black text-amber-600 dark:text-amber-400">{userPadelCoins}</td>
                               <td className="py-4">
                                 <div className="flex flex-col gap-2">
                                   <div className="flex flex-wrap gap-1 min-h-[1.25rem]">
@@ -1033,12 +1044,21 @@ export default function AdminPage() {
                     {filteredUsers.map((user) => {
                       const userBookings = accepted.filter(b => b.phone === user.phone || b.name === user.name);
                       const userTotalPaid = userBookings.reduce((s, b) => s + b.price, 0);
+                      const userPadelCoins = userBookings.length - (user.spentCoins || 0);
+                      const userProfilePath = user.username ? `/profile/${user.username}` : "";
 
                       return (
                         <div key={user.uid} className={`bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800/60 shadow-sm flex flex-col gap-4 ${user.isSuspended ? "opacity-70 bg-rose-50/30 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30" : ""}`}>
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="font-bold text-slate-800 dark:text-white text-base">{user.name}</p>
+                              <button
+                                type="button"
+                                onClick={() => userProfilePath && navigate(userProfilePath)}
+                                disabled={!userProfilePath}
+                                className="font-bold text-slate-800 dark:text-white text-base hover:text-accent transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                              >
+                                {user.name}
+                              </button>
                               <p className="text-[11px] text-slate-400 font-bold tracking-widest">{user.phone || "N/A"}</p>
                               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 text-accent">{t.joined}: {user.memberSince}</p>
                             </div>
@@ -1065,6 +1085,10 @@ export default function AdminPage() {
                             <div>
                               <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">{t.totalPaid}</p>
                               <p className="font-black text-emerald-600 dark:text-emerald-400 text-lg">{userTotalPaid} <span className="text-xs">EGP</span></p>
+                            </div>
+                            <div className="col-span-2">
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">Padel Coins</p>
+                              <p className="font-black text-amber-600 dark:text-amber-400 text-lg">{userPadelCoins}</p>
                             </div>
                             <div className="col-span-2 pt-2 border-t border-slate-100 dark:border-slate-700/50">
                               <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5">{t.badges}</p>

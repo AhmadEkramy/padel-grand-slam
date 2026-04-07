@@ -17,12 +17,14 @@ export function useFirestoreUsers() {
                     const d = docSnap.data();
                     return {
                         uid: docSnap.id,
+                        username: d.username || "",
                         name: d.name || "",
                         email: d.email || "",
                         phone: d.phone || "",
                         role: d.role || "user",
                         memberSince: d.memberSince || "",
                         isSuspended: d.isSuspended || false,
+                        spentCoins: d.spentCoins || 0,
                         discountPercentage: d.discountPercentage || 0,
                         activeBadges: d.activeBadges || [],
                     };
